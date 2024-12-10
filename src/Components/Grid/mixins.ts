@@ -16,5 +16,21 @@ font-size: 24px;
 border-radius: 10px;
 text-align: center;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-margin-bottom: 20px;
+`;
+
+
+export const ResetButton = styled.button`
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #45a049;
+  }
 `;

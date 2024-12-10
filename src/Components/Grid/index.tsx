@@ -1,4 +1,4 @@
-import { GridContainer, VictoryMessage } from "./mixins";
+import { GridContainer, VictoryMessage, ResetButton } from "./mixins";
 import { useState, useEffect } from "react";
 import Cell from "../Cell";
 import { emojis } from "../../Constants/emojis";
@@ -11,7 +11,7 @@ const Grid = () => {
   const [shuffledCells, setShuffledCells] = useState<string[]>([]);
   const [gameWon, setGameWon] = useState(false);
 
-  useEffect(() => {
+  const generateShuffledCells = () => {
     const shuffledEmojis = [...emojis];
     const shuffle = (array: string[]) => {
       for (let i = array.length - 1; i > 0; i--) {
@@ -22,6 +22,10 @@ const Grid = () => {
 
     shuffle(shuffledEmojis);
     setShuffledCells(shuffledEmojis);
+  };
+
+  useEffect(() => {
+    generateShuffledCells();
   }, []);
 
   const handleCellClick = (emoji: string, index: number) => {
@@ -35,7 +39,7 @@ const Grid = () => {
         setVisibleCells((prev) => [...prev, newSelectedCells[0].emoji]);
       }
 
-      setTimeout(() => setSelectedCells([]), 700);
+      setTimeout(() => setSelectedCells([]), 650);
     }
   };
 
@@ -45,9 +49,21 @@ const Grid = () => {
     }
   }, [visibleCells]);
 
+  const resetGame = () => {
+    setVisibleCells([]);
+    setSelectedCells([]);
+    setGameWon(false);
+    generateShuffledCells();
+  };
+
   return (
     <>
-      {gameWon && <VictoryMessage>¡Felicidades, ganaste!</VictoryMessage>}
+      {gameWon && (
+        <>
+          <VictoryMessage>¡Felicidades, ganaste!</VictoryMessage>
+          <ResetButton onClick={resetGame}>Reiniciar Juego</ResetButton>
+        </>
+      )}
       <GridContainer>
         {shuffledCells.map((emoji, index) => (
           <Cell
