@@ -1,25 +1,7 @@
-import { GridContainer } from "./mixins";
+import { GridContainer, VictoryMessage } from "./mixins";
 import { useState, useEffect } from "react";
 import Cell from "../Cell";
-
-const emojis = [
-  "🐶",
-  "🐱",
-  "🐭",
-  "🐹",
-  "🐰",
-  "🦊",
-  "🐻",
-  "🐼",
-  "🐶",
-  "🐱",
-  "🐭",
-  "🐹",
-  "🐰",
-  "🦊",
-  "🐻",
-  "🐼",
-];
+import { emojis } from "../../Constants/emojis";
 
 const Grid = () => {
   const [visibleCells, setVisibleCells] = useState<string[]>([]);
@@ -27,6 +9,7 @@ const Grid = () => {
     { emoji: string; index: number }[]
   >([]);
   const [shuffledCells, setShuffledCells] = useState<string[]>([]);
+  const [gameWon, setGameWon] = useState(false);
 
   useEffect(() => {
     const shuffledEmojis = [...emojis];
@@ -56,20 +39,29 @@ const Grid = () => {
     }
   };
 
+  useEffect(() => {
+    if (visibleCells.length * 2 === emojis.length) {
+      setGameWon(true);
+    }
+  }, [visibleCells]);
+
   return (
-    <GridContainer>
-      {shuffledCells.map((emoji, index) => (
-        <Cell
-          key={index}
-          emoji={emoji}
-          visible={
-            visibleCells.includes(emoji) ||
-            selectedCells.some((cell) => cell.index === index)
-          }
-          onClick={() => handleCellClick(emoji, index)}
-        />
-      ))}
-    </GridContainer>
+    <>
+      {gameWon && <VictoryMessage>¡Felicidades, ganaste!</VictoryMessage>}
+      <GridContainer>
+        {shuffledCells.map((emoji, index) => (
+          <Cell
+            key={index}
+            emoji={emoji}
+            visible={
+              visibleCells.includes(emoji) ||
+              selectedCells.some((cell) => cell.index === index)
+            }
+            onClick={() => handleCellClick(emoji, index)}
+          />
+        ))}
+      </GridContainer>
+    </>
   );
 };
 
