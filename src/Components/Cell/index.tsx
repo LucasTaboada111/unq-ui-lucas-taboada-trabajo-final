@@ -1,17 +1,20 @@
 import { CellContainer } from "./mixins";
 
+interface CellProps {
+    emoji: string;
+    visible: boolean;
+    onClick: () => void;
+  }
+  
+
 const Cell = ({
-  number,
+  emoji,
   visible,
   onClick,
-}: {
-  number: number;
-  visible: boolean;
-  onClick: () => void;
-}) => {
+}: CellProps) => {
   return (
     <CellContainer visible={visible} onClick={onClick}>
-      {number}
+      {visible ? emoji : '❓'}
     </CellContainer>
   );
 };

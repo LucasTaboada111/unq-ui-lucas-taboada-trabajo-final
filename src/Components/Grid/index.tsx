@@ -2,37 +2,54 @@ import { GridContainer } from "./mixins";
 import { useState, useEffect } from "react";
 import Cell from "../Cell";
 
+const emojis = [
+  "🐶",
+  "🐱",
+  "🐭",
+  "🐹",
+  "🐰",
+  "🦊",
+  "🐻",
+  "🐼",
+  "🐶",
+  "🐱",
+  "🐭",
+  "🐹",
+  "🐰",
+  "🦊",
+  "🐻",
+  "🐼",
+];
+
 const Grid = () => {
-  const [visibleCells, setVisibleCells] = useState<number[]>([]);
+  const [visibleCells, setVisibleCells] = useState<string[]>([]);
   const [selectedCells, setSelectedCells] = useState<
-    { number: number; index: number }[]
+    { emoji: string; index: number }[]
   >([]);
-  const [shuffledCells, setShuffledCells] = useState<number[]>([]);
+  const [shuffledCells, setShuffledCells] = useState<string[]>([]);
 
   useEffect(() => {
-    const numbers = Array.from({ length: 8 }, (_, index) => index + 1);
-    const pairs = [...numbers, ...numbers];
-
-    const shuffle = (array: number[]) => {
+    const shuffledEmojis = [...emojis];
+    const shuffle = (array: string[]) => {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
     };
 
-    shuffle(pairs);
-    setShuffledCells(pairs);
+    shuffle(shuffledEmojis);
+    setShuffledCells(shuffledEmojis);
   }, []);
 
-  const handleCellClick = (number: number, index: number) => {
-    if (visibleCells.includes(number) || selectedCells.length === 2) return;
+  const handleCellClick = (emoji: string, index: number) => {
+    if (visibleCells.includes(emoji) || selectedCells.length === 2) return;
 
-    const newSelectedCells = [...selectedCells, { number, index }];
+    const newSelectedCells = [...selectedCells, { emoji, index }];
     setSelectedCells(newSelectedCells);
 
     if (newSelectedCells.length === 2) {
-      if (newSelectedCells[0].number === newSelectedCells[1].number) {
-        setVisibleCells((prev) => [...prev, newSelectedCells[0].number]);
+      if (newSelectedCells[0].emoji === newSelectedCells[1].emoji) {
+        setVisibleCells((prev) => [...prev, newSelectedCells[0].emoji]);
       }
 
       setTimeout(() => setSelectedCells([]), 700);
@@ -41,15 +58,15 @@ const Grid = () => {
 
   return (
     <GridContainer>
-      {shuffledCells.map((number, index) => (
+      {shuffledCells.map((emoji, index) => (
         <Cell
           key={index}
-          number={number}
+          emoji={emoji}
           visible={
-            visibleCells.includes(number) ||
+            visibleCells.includes(emoji) ||
             selectedCells.some((cell) => cell.index === index)
           }
-          onClick={() => handleCellClick(number, index)}
+          onClick={() => handleCellClick(emoji, index)}
         />
       ))}
     </GridContainer>
