@@ -19,7 +19,7 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 `;
 
 
-export const ResetButton = styled.button`
+export const Button = styled.button`
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 10px 20px;

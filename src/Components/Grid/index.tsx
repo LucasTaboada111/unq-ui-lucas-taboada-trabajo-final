@@ -1,4 +1,4 @@
-import { GridContainer, VictoryMessage, ResetButton } from "./mixins";
+import { GridContainer, VictoryMessage, Button } from "./mixins";
 import { useState, useEffect } from "react";
 import Cell from "../Cell";
 import { emojis } from "../../Constants/emojis";
@@ -10,6 +10,7 @@ const Grid = () => {
   >([]);
   const [shuffledCells, setShuffledCells] = useState<string[]>([]);
   const [gameWon, setGameWon] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
 
   const generateShuffledCells = () => {
     const shuffledEmojis = [...emojis];
@@ -54,30 +55,36 @@ const Grid = () => {
     setSelectedCells([]);
     setGameWon(false);
     generateShuffledCells();
+    setGameStarted(false);
   };
 
+  if (!gameStarted && !gameWon) {
+    return <Button onClick={() => setGameStarted(true)}>Iniciar Memotest</Button>;
+  }
+
+  if (gameWon) {
+    return (
+      <>
+        <VictoryMessage>¡Felicidades, ganaste!</VictoryMessage>
+        <Button onClick={resetGame}>Reiniciar Memotest</Button>
+      </>
+    );
+  }
+
   return (
-    <>
-      {gameWon && (
-        <>
-          <VictoryMessage>¡Felicidades, ganaste!</VictoryMessage>
-          <ResetButton onClick={resetGame}>Reiniciar Juego</ResetButton>
-        </>
-      )}
-      <GridContainer>
-        {shuffledCells.map((emoji, index) => (
-          <Cell
-            key={index}
-            emoji={emoji}
-            visible={
-              visibleCells.includes(emoji) ||
-              selectedCells.some((cell) => cell.index === index)
-            }
-            onClick={() => handleCellClick(emoji, index)}
-          />
-        ))}
-      </GridContainer>
-    </>
+    <GridContainer>
+      {shuffledCells.map((emoji, index) => (
+        <Cell
+          key={index}
+          emoji={emoji}
+          visible={
+            visibleCells.includes(emoji) ||
+            selectedCells.some((cell) => cell.index === index)
+          }
+          onClick={() => handleCellClick(emoji, index)}
+        />
+      ))}
+    </GridContainer>
   );
 };
 
